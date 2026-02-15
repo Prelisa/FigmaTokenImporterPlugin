@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload - Figma Token Importer</title>
+    <style>
+      /* Apple Design System - SF Pro Font Stack */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Apple Design System Colors - Dark Mode */
+        --apple-black: #000000;
+        --apple-gray-6: #1d1d1f;
+        --apple-gray-5: #2c2c2e;
+        --apple-gray-4: #3a3a3c;
+        --apple-gray-3: #48484a;
+        --apple-gray-2: #636366;
+        --apple-gray-1: #8e8e93;
+        --apple-white: #ffffff;
+        --apple-blue: #007aff;
+        --apple-green: #34c759;
+        --apple-red: #ff3b30;
+        --apple-yellow: #ffcc00;
+
+        /* Semantic Colors */
+        --background: #1a1a1c;
+        --background-secondary: #242426;
+        --background-tertiary: #2e2e30;
+        --label: var(--apple-white);
+        --label-secondary: rgba(255, 255, 255, 0.55);
+        --label-tertiary: rgba(255, 255, 255, 0.25);
+        --separator: rgba(255, 255, 255, 0.1);
+
+        /* Spacing (8pt grid) */
+        --spacing-xs: 4px;
+        --spacing-s: 8px;
+        --spacing-m: 16px;
+        --spacing-l: 24px;
+        --spacing-xl: 32px;
+        --spacing-xxl: 48px;
+
+        /* Border Radius */
+        --radius-s: 2px;
+        --radius-m: 2px;
+        --radius-l: 2px;
+        --radius-xl: 2px;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+        background: var(--background);
+        color: var(--label);
+        width: 440px;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Navigation Bar */
+      .navigation-bar {
+        padding: var(--spacing-m) var(--spacing-l);
+        background: var(--background);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+      }
+
+      .progress-indicator {
+        display: flex;
+        gap: var(--spacing-s);
+      }
+
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--apple-gray-3);
+        transition: all 0.3s ease;
+      }
+
+      .progress-dot.active {
+        background: var(--apple-blue);
+        transform: scale(1.25);
+      }
+
+      /* Content Area */
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+      }
+
+      /* Icon Container */
+      .icon-container {
+        margin-bottom: var(--spacing-l);
+      }
+
+      .icon {
+        width: 64px;
+        height: 64px;
+        color: var(--apple-blue);
+      }
+
+      /* Text Styles */
+      .title {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin-bottom: var(--spacing-s);
+        text-align: center;
+      }
+
+      .subtitle {
+        font-size: 15px;
+        color: var(--label-secondary);
+        text-align: center;
+        line-height: 1.4;
+        margin-bottom: var(--spacing-xl);
+      }
+
+      /* Drop Zone */
+      .drop-zone {
+        width: 100%;
+        max-width: 320px;
+        padding: var(--spacing-xxl) var(--spacing-l);
+        background: var(--background-secondary);
+        border: 2px dashed var(--apple-gray-3);
+        border-radius: var(--radius-l);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+      }
+
+      .drop-zone:hover {
+        background: var(--background-tertiary);
+        border-color: var(--apple-blue);
+        transform: scale(1.02);
+      }
+
+      .drop-zone.drag-over {
+        background: rgba(0, 122, 255, 0.1);
+        border-color: var(--apple-blue);
+        border-style: solid;
+      }
+
+      .drop-zone-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--apple-blue);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .drop-zone-subtext {
+        font-size: 13px;
+        color: var(--label-tertiary);
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      /* Footer */
+      .footer {
+        padding: var(--spacing-l);
+        background: var(--background);
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-m);
+      }
+
+      /* Buttons - Apple Style */
+      .button {
+        height: 44px;
+        min-width: 100px;
+        padding: 0 var(--spacing-l);
+        border-radius: var(--radius-m);
+        font-size: 17px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-s);
+      }
+
+      .button-primary {
+        background: var(--apple-blue);
+        color: white;
+      }
+
+      .button-primary:hover {
+        background: #0051d5;
+      }
+
+      .button-primary:active {
+        background: #003d99;
+      }
+
+      .button-primary:disabled {
+        background: var(--apple-gray-4);
+        color: var(--label-tertiary);
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navigation-bar">
+      <div class="progress-indicator">
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+      <div class="icon-container">
+        <svg class="icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="12" y="8" width="40" height="48" rx="4" stroke="currentColor" stroke-width="2" />
+          <path d="M20 24h24M20 32h24M20 40h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <circle cx="32" cy="48" r="8" fill="currentColor" opacity="0.2" />
+          <path d="M32 44v8M28 48h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <h1 class="title">Import Design Tokens</h1>
+      <p class="subtitle">Upload your JSON or CSV file containing design tokens to import them into Figma variables.</p>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".json,.csv" multiple />
+        <div class="drop-zone-text">Choose Files</div>
+        <div class="drop-zone-subtext">or drag and drop here</div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button class="button button-primary" disabled id="nextButton">Next</button>
+    </footer>
+
+    <script>
+      // File handling logic
+      const dropZone = document.getElementById("dropZone");
+      const fileInput = document.getElementById("fileInput");
+      const nextButton = document.getElementById("nextButton");
+
+      dropZone.addEventListener("click", () => fileInput.click());
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("drag-over");
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("drag-over");
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("drag-over");
+        handleFiles(e.dataTransfer.files);
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        handleFiles(e.target.files);
+      });
+
+      function handleFiles(files) {
+        if (files.length > 0) {
+          nextButton.disabled = false;
+          // Update drop zone text
+          const text = dropZone.querySelector(".drop-zone-text");
+          text.textContent = `${files.length} file${files.length > 1 ? "s" : ""} selected`;
+        }
+      }
+    </script>
+  </body>
+</html>

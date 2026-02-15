@@ -1,0 +1,16 @@
+{
+  "name": "figma-token-importer",
+  "version": "1.0.0",
+  "description": "Import design tokens from JSON/CSV to Figma variables",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.plugin.json && tsc -p tsconfig.ui.json && node build-ui.js",
+    "watch": "tsc --watch",
+    "dev": "concurrently \"npm run watch\" \"figma-plugin-helper watch\""
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "latest",
+    "typescript": "latest",
+    "concurrently": "latest"
+  }
+}

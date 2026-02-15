@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configure - Figma Token Importer</title>
+    <style>
+      /* Apple Design System - SF Pro Font Stack */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Apple Design System Colors - Dark Mode */
+        --apple-black: #000000;
+        --apple-gray-6: #1d1d1f;
+        --apple-gray-5: #2c2c2e;
+        --apple-gray-4: #3a3a3c;
+        --apple-gray-3: #48484a;
+        --apple-gray-2: #636366;
+        --apple-gray-1: #8e8e93;
+        --apple-white: #ffffff;
+        --apple-blue: #007aff;
+        --apple-green: #34c759;
+        --apple-red: #ff3b30;
+        --apple-yellow: #ffcc00;
+        --apple-purple: #af52de;
+
+        /* Semantic Colors */
+        --background: #1a1a1c;
+        --background-secondary: #242426;
+        --background-tertiary: #2e2e30;
+        --label: var(--apple-white);
+        --label-secondary: rgba(255, 255, 255, 0.55);
+        --label-tertiary: rgba(255, 255, 255, 0.25);
+        --separator: rgba(255, 255, 255, 0.1);
+
+        /* Spacing (8pt grid) */
+        --spacing-xs: 4px;
+        --spacing-s: 8px;
+        --spacing-m: 16px;
+        --spacing-l: 24px;
+        --spacing-xl: 32px;
+        --spacing-xxl: 48px;
+
+        /* Border Radius */
+        --radius-s: 2px;
+        --radius-m: 2px;
+        --radius-l: 2px;
+        --radius-xl: 2px;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+        background: var(--background);
+        color: var(--label);
+        width: 440px;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Navigation Bar */
+      .navigation-bar {
+        padding: var(--spacing-m) var(--spacing-l);
+        background: var(--background);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60px;
+      }
+
+      .progress-indicator {
+        display: flex;
+        gap: var(--spacing-s);
+      }
+
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--apple-gray-3);
+        transition: all 0.3s ease;
+      }
+
+      .progress-dot.active {
+        background: var(--apple-blue);
+        transform: scale(1.25);
+      }
+
+      /* Content Area */
+      .content {
+        flex: 1;
+        padding: var(--spacing-l);
+        overflow-y: auto;
+      }
+
+      /* Section Headers */
+      .section-title {
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: var(--spacing-m);
+        color: var(--label);
+      }
+
+      /* Collection Selector */
+      .collection-selector {
+        margin-bottom: var(--spacing-l);
+      }
+
+      .form-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--label-secondary);
+        margin-bottom: var(--spacing-s);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .select-button {
+        width: 100%;
+        height: 44px;
+        padding: 0 var(--spacing-m);
+        background: var(--background-secondary);
+        border: 1px solid var(--apple-gray-4);
+        border-radius: var(--radius-m);
+        color: var(--label);
+        font-size: 17px;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .select-button:hover {
+        background: var(--background-tertiary);
+        border-color: var(--apple-gray-3);
+      }
+
+      .select-button:focus {
+        outline: none;
+        border-color: var(--apple-blue);
+        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+      }
+
+      .chevron {
+        width: 12px;
+        height: 12px;
+        color: var(--label-secondary);
+      }
+
+      /* Token Preview */
+      .preview-container {
+        background: var(--background-secondary);
+        border-radius: var(--radius-l);
+        padding: var(--spacing-m);
+        max-height: 280px;
+        overflow-y: auto;
+      }
+
+      /* Token Groups */
+      .token-group {
+        margin-bottom: var(--spacing-m);
+      }
+
+      .token-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .token-group-header {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-s);
+        margin-bottom: var(--spacing-s);
+      }
+
+      .token-group-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      .token-group-title {
+        font-size: 15px;
+        font-weight: 600;
+        flex: 1;
+      }
+
+      .token-count {
+        font-size: 13px;
+        color: var(--label-tertiary);
+        background: var(--apple-gray-4);
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+
+      /* Token List */
+      .token-list {
+        display: grid;
+        gap: var(--spacing-xs);
+      }
+
+      .token-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-s) var(--spacing-m);
+        background: var(--background-tertiary);
+        border-radius: var(--radius-s);
+        font-size: 13px;
+      }
+
+      .token-name {
+        font-family: "SF Mono", monospace;
+        font-weight: 500;
+        color: var(--label);
+      }
+
+      .token-value {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-s);
+        color: var(--label-secondary);
+      }
+
+      /* Color Swatch */
+      .color-swatch {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid var(--separator);
+      }
+
+      /* Footer */
+      .footer {
+        padding: var(--spacing-l);
+        background: var(--background);
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-m);
+      }
+
+      /* Buttons - Apple Style */
+      .button {
+        height: 44px;
+        min-width: 100px;
+        padding: 0 var(--spacing-l);
+        border-radius: var(--radius-m);
+        font-size: 17px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-s);
+      }
+
+      .button-primary {
+        background: var(--apple-blue);
+        color: white;
+      }
+
+      .button-primary:hover {
+        background: #0051d5;
+      }
+
+      .button-primary:active {
+        background: #003d99;
+      }
+
+      .button-secondary {
+        background: var(--apple-gray-4);
+        color: var(--label);
+      }
+
+      .button-secondary:hover {
+        background: var(--apple-gray-3);
+      }
+
+      .button-secondary:active {
+        background: var(--apple-gray-5);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--apple-gray-3);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--apple-gray-2);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navigation-bar">
+      <div class="progress-indicator">
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Collection Selector -->
+      <section class="collection-selector">
+        <div class="form-label">Collection</div>
+        <button class="select-button">
+          <span>New Collection</span>
+          <svg class="chevron" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+          </svg>
+        </button>
+      </section>
+
+      <!-- Token Preview -->
+      <section>
+        <h2 class="section-title">Token Preview</h2>
+        <div class="preview-container">
+          <!-- Colors Group -->
+          <div class="token-group">
+            <div class="token-group-header">
+              <svg class="token-group-icon" viewBox="0 0 20 20" fill="currentColor">
+                <circle cx="10" cy="10" r="8" opacity="0.3" />
+                <circle cx="10" cy="10" r="5" />
+              </svg>
+              <span class="token-group-title">Colors</span>
+              <span class="token-count">6</span>
+            </div>
+            <div class="token-list">
+              <div class="token-item">
+                <span class="token-name">primary</span>
+                <div class="token-value">
+                  <div class="color-swatch" style="background: #007aff"></div>
+                  <span>#007AFF</span>
+                </div>
+              </div>
+              <div class="token-item">
+                <span class="token-name">secondary</span>
+                <div class="token-value">
+                  <div class="color-swatch" style="background: #5856d6"></div>
+                  <span>#5856D6</span>
+                </div>
+              </div>
+              <div class="token-item">
+                <span class="token-name">success</span>
+                <div class="token-value">
+                  <div class="color-swatch" style="background: #34c759"></div>
+                  <span>#34C759</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spacing Group -->
+          <div class="token-group">
+            <div class="token-group-header">
+              <svg class="token-group-icon" viewBox="0 0 20 20" fill="currentColor">
+                <rect x="3" y="8" width="14" height="4" opacity="0.3" />
+                <rect x="5" y="6" width="10" height="8" fill="none" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <span class="token-group-title">Spacing</span>
+              <span class="token-count">5</span>
+            </div>
+            <div class="token-list">
+              <div class="token-item">
+                <span class="token-name">xs</span>
+                <span class="token-value">4px</span>
+              </div>
+              <div class="token-item">
+                <span class="token-name">sm</span>
+                <span class="token-value">8px</span>
+              </div>
+              <div class="token-item">
+                <span class="token-name">md</span>
+                <span class="token-value">16px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button class="button button-secondary">Back</button>
+      <button class="button button-primary">Import Tokens</button>
+    </footer>
+  </body>
+</html>

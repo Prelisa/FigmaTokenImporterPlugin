@@ -1,0 +1,42 @@
+{
+  "Colors": {
+    "primary-blue": "#0066FF",
+    "primary-dark": "#0052CC",
+    "secondary-red": "#FF0000",
+    "success-green": "#00CC00",
+    "warning-yellow": "#FFB800",
+    "error-red": "#FF3333",
+    "neutral-gray": "#666666"
+  },
+  "Spacing": {
+    "xs": 4,
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "xl": 32,
+    "2xl": 48
+  },
+  "Typography": {
+    "heading-large": 32,
+    "heading-medium": 24,
+    "heading-small": 18,
+    "body-large": 16,
+    "body-medium": 14,
+    "body-small": 12,
+    "caption": 10
+  },
+  "BorderRadius": {
+    "none": 0,
+    "sm": 2,
+    "md": 4,
+    "lg": 8,
+    "full": 9999
+  },
+  "Opacity": {
+    "full": 1,
+    "high": 0.87,
+    "medium": 0.6,
+    "low": 0.38,
+    "disabled": 0.12
+  }
+}

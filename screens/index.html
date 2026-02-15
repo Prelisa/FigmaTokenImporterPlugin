@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figma Token Importer - Screen Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Figma Design System Colors */
+        --figma-bg: #1e1e1e;
+        --figma-bg-secondary: #2c2c2c;
+        --figma-bg-tertiary: #383838;
+        --figma-bg-brand: #0d99ff;
+        --figma-bg-brand-hover: #0c7fd3;
+        --figma-bg-success: #14ae5c;
+        --figma-bg-danger: #f24822;
+
+        --figma-text: #ffffff;
+        --figma-text-secondary: #b3b3b3;
+        --figma-text-tertiary: #8c8c8c;
+        --figma-text-brand: #4ecaff;
+
+        --figma-border: #444444;
+        --figma-border-strong: #5c5c5c;
+        --figma-border-brand: #0d99ff;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: var(--figma-bg);
+        color: var(--figma-text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 24px;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+      }
+
+      /* Grid Pattern */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 24px 24px;
+        pointer-events: none;
+      }
+
+      body > * {
+        position: relative;
+      }
+
+      /* Figma Brand */
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .figma-icon {
+        width: 32px;
+        height: 32px;
+      }
+
+      h1 {
+        color: var(--figma-text);
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-align: center;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        color: var(--figma-text-secondary);
+        font-size: 16px;
+        margin-bottom: 48px;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      .screens-container {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1440px;
+        width: 100%;
+      }
+
+      .screen-wrapper {
+        background: var(--figma-bg-secondary);
+        border: 1px solid var(--figma-border);
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .screen-wrapper:hover {
+        border-color: var(--figma-border-strong);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        transform: translateY(-4px);
+      }
+
+      .screen-wrapper:hover .status-dot {
+        background: var(--figma-bg-brand);
+      }
+
+      .screen-title {
+        color: var(--figma-text);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .screen-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background: var(--figma-bg-brand);
+        color: white;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .status-dot {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 8px;
+        height: 8px;
+        background: var(--figma-bg-success);
+        border-radius: 50%;
+        transition: background 0.2s ease;
+      }
+
+      .screen-frame {
+        width: 440px;
+        height: 600px;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--figma-border);
+        background: #1a1a1c;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .navigation-links {
+        display: flex;
+        gap: 16px;
+        margin-top: 48px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav-link {
+        color: var(--figma-text);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px 16px;
+        background: var(--figma-bg-secondary);
+        border: 1px solid var(--figma-border);
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .nav-link:hover {
+        background: var(--figma-bg-tertiary);
+        border-color: var(--figma-border-brand);
+        color: var(--figma-text-brand);
+      }
+
+      .tech-stack {
+        margin-top: 48px;
+        padding: 24px;
+        background: var(--figma-bg-secondary);
+        border: 1px solid var(--figma-border);
+        border-radius: 8px;
+        max-width: 800px;
+        text-align: center;
+      }
+
+      .tech-stack h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--figma-text);
+      }
+
+      .tech-stack p {
+        color: var(--figma-text-secondary);
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .tech-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .tech-badge {
+        padding: 6px 12px;
+        background: var(--figma-bg-tertiary);
+        color: var(--figma-text-secondary);
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1px solid var(--figma-border);
+        transition: all 0.2s ease;
+      }
+
+      .tech-badge:hover {
+        border-color: var(--figma-border-brand);
+        color: var(--figma-text-brand);
+      }
+
+      /* Figma Logo SVG */
+      .figma-logo {
+        fill: var(--figma-text-brand);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Figma Brand -->
+    <div class="brand">
+      <svg class="figma-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 12C8 9.79086 9.79086 8 12 8H16V16H12C9.79086 16 8 14.2091 8 12Z" fill="#F24E1E" />
+        <path d="M8 20C8 17.7909 9.79086 16 12 16H16V24H12C9.79086 24 8 22.2091 8 20Z" fill="#A259FF" />
+        <path d="M16 8H20C22.2091 8 24 9.79086 24 12C24 14.2091 22.2091 16 20 16H16V8Z" fill="#FF7262" />
+        <path d="M16 16H20C22.2091 16 24 17.7909 24 20C24 22.2091 22.2091 24 20 24C17.7909 24 16 22.2091 16 20V16Z" fill="#1ABCFE" />
+        <path d="M16 8V16H20C22.2091 16 24 14.2091 24 12C24 9.79086 22.2091 8 20 8H16Z" fill="#0ACF83" />
+      </svg>
+    </div>
+
+    <h1>Figma Token Importer</h1>
+    <p class="subtitle">Design System Implementation</p>
+
+    <div class="screens-container">
+      <!-- Screen 1: Upload -->
+      <div class="screen-wrapper">
+        <div class="status-dot"></div>
+        <div class="screen-title">
+          <span class="screen-number">1</span>
+          Upload Screen
+        </div>
+        <div class="screen-frame">
+          <iframe src="upload-screen.html"></iframe>
+        </div>
+      </div>
+
+      <!-- Screen 2: Configure -->
+      <div class="screen-wrapper">
+        <div class="status-dot"></div>
+        <div class="screen-title">
+          <span class="screen-number">2</span>
+          Configure Screen
+        </div>
+        <div class="screen-frame">
+          <iframe src="configure-screen.html"></iframe>
+        </div>
+      </div>
+
+      <!-- Screen 3: Success -->
+      <div class="screen-wrapper">
+        <div class="status-dot"></div>
+        <div class="screen-title">
+          <span class="screen-number">3</span>
+          Success Screen
+        </div>
+        <div class="screen-frame">
+          <iframe src="success-screen.html"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation-links">
+      <a href="upload-screen.html" class="nav-link" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.5 3.5L3.5 10.5M10.5 3.5V8.5M10.5 3.5H5.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        View Upload
+      </a>
+      <a href="configure-screen.html" class="nav-link" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.5 3.5L3.5 10.5M10.5 3.5V8.5M10.5 3.5H5.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        View Configure
+      </a>
+      <a href="success-screen.html" class="nav-link" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M10.5 3.5L3.5 10.5M10.5 3.5V8.5M10.5 3.5H5.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        View Success
+      </a>
+    </div>
+
+    <div class="tech-stack">
+      <h3>Design System Features</h3>
+      <p>Built with Figma's design principles for a cohesive plugin experience</p>
+      <div class="tech-list">
+        <span class="tech-badge">SF Pro Typography</span>
+        <span class="tech-badge">Dark Mode</span>
+        <span class="tech-badge">8pt Grid System</span>
+        <span class="tech-badge">Semantic Colors</span>
+        <span class="tech-badge">Smooth Animations</span>
+        <span class="tech-badge">44pt Touch Targets</span>
+        <span class="tech-badge">Accessibility First</span>
+        <span class="tech-badge">Responsive Layout</span>
+      </div>
+    </div>
+  </body>
+</html>
