@@ -26,7 +26,7 @@ const htmlEscaped = JSON.stringify(html);
 
 // 4. Replace the __html__ reference in showUI call with actual HTML
 // This avoids the "not extensible" error
-codeJs = codeJs.replace("figma.showUI(__html__, { width: 440, height: 600 });", `figma.showUI(${htmlEscaped}, { width: 440, height: 600 });`);
+codeJs = codeJs.replace("figma.showUI(__html__, { width: 360, height: 640 });", `figma.showUI(${htmlEscaped}, { width: 360, height: 640 });`);
 
 // 5. Save the final code.js
 fs.writeFileSync(rootCodePath, codeJs);

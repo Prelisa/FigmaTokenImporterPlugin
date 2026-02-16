@@ -7,42 +7,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script src="https://unpkg.com/feather-icons"></script>
     <style>
       /* ========== RESET ========== */
       *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
       /* ========== DESIGN TOKENS ========== */
       :root {
-        /* Backgrounds */
-        --bg:            #1e1e1e;
-        --bg-secondary:  #2c2c2c;
-        --bg-tertiary:   #383838;
-        --bg-elevated:   #3a3a3c;
-        /* Brand */
-        --brand:         #0d99ff;
-        --brand-hover:   #0c7fd3;
-        --brand-active:  #0a68b0;
-        --brand-muted:   rgba(13,153,255,0.15);
-        /* Semantic */
-        --success:       #14ae5c;
-        --warning:       #f5a623;
-        --danger:        #f24822;
-        --info:          #a259ff;
-        /* Text */
-        --text:          #ffffff;
-        --text-secondary:#b3b3b3;
+        --bg: #2c2c2c;
+        --bg-surface: #383838;
+        --bg-elevated: #3a3a3c;
+        --bg-token: #444444;
+        --footer-bg: #242424;
+
+        --border: #555555;
+        --border-light: #4a4a4a;
+
+        --text-primary: #ffffff;
+        --text-secondary: #b3b3b3;
         --text-tertiary: #8c8c8c;
-        --text-brand:    #4ecaff;
-        /* Borders */
-        --border:        #444444;
-        --border-strong: #5c5c5c;
-        --border-brand:  #0d99ff;
-        /* Spacing (8pt grid) */
-        --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px; --sp-2xl: 48px;
-        /* Radius */
-        --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-xl: 12px; --radius-full: 9999px;
-        /* Transitions */
+
+        --brand: #0d99ff;
+        --success: #34c759;
+        --success-bg: rgba(52, 199, 89, 0.15);
+        --danger: #f24822;
+        --warning: #f5a623;
+        --info: #a259ff;
+
+        --dot-active: #ffffff;
+        --dot-inactive: #555555;
+
+        --btn-bg: #383838;
+        --btn-bg-hover: #444444;
+
         --ease: cubic-bezier(0.4, 0, 0.2, 1);
       }
 
@@ -52,46 +48,11 @@
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         font-size: 13px;
         line-height: 1.5;
-        color: var(--text);
+        color: var(--text-primary);
         background: var(--bg);
         padding: 0;
         overflow: hidden;
         -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      body::before {
-        content: ''; position: fixed; inset: 0; pointer-events: none;
-        background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-        background-size: 24px 24px;
-      }
-
-      /* ========== TYPOGRAPHY ========== */
-      .display {
-        font-size: 20px;
-        line-height: 28px;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-      }
-
-      .title {
-        font-size: 15px;
-        line-height: 22px;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-      }
-
-      .caption {
-        font-size: 12px;
-        line-height: 16px;
-        font-weight: 500;
-        color: var(--text-secondary);
-      }
-
-      .mono {
-        font-family: 'SF Mono', Monaco, monospace;
-        font-size: 11px;
-        line-height: 16px;
       }
 
       /* ========== CONTAINER ========== */
@@ -102,15 +63,32 @@
         position: relative;
       }
 
+      /* ========== HEADER ========== */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 20px;
+        flex-shrink: 0;
+      }
+
+      .logo-icon { width: 24px; height: 24px; flex-shrink: 0; }
+
+      .logo-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+      }
+
       /* ========== STEP CONTAINER ========== */
       .step-container {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: var(--sp-md) var(--sp-md);
+        padding: 8px 20px 0;
         transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+        overflow: hidden;
       }
 
       .step-container[data-step]:not([data-active="true"]) {
@@ -118,46 +96,54 @@
       }
 
       /* ========== PROGRESS DOTS ========== */
-      .progress-dots,
-      .step-indicators {
+      .progress-dots {
         display: flex;
-        gap: var(--sp-sm);
+        gap: 8px;
         justify-content: center;
-        align-items: center;
-        padding: var(--sp-sm) var(--sp-md);
-        background: var(--bg);
+        padding: 16px 0;
+        flex-shrink: 0;
       }
 
-      .progress-dot,
       .step-dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: var(--bg-elevated);
+        background: var(--dot-inactive);
         transition: all 0.3s var(--ease);
       }
 
-      .progress-dot.active,
-      .step-dot.active {
-        background: var(--brand);
-        transform: scale(1.3);
+      .step-dot.active { background: var(--dot-active); }
+      .step-dot.done { background: var(--success); }
+
+      /* ========== TYPOGRAPHY ========== */
+      .title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
       }
 
-      .progress-dot.done,
-      .step-dot.done {
-        background: var(--success);
+      .caption {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-tertiary);
+      }
+
+      .mono {
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 12px;
       }
 
       /* ========== BUTTONS ========== */
       .btn {
-        height: 36px;
-        padding: 0 var(--sp-md);
-        border-radius: var(--radius-md);
-        font-size: 13px;
+        height: 40px;
+        padding: 0 20px;
+        border-radius: 8px;
+        font-size: 14px;
         font-weight: 500;
         border: none;
         cursor: pointer;
-        transition: all 0.2s var(--ease);
+        transition: all 0.15s ease;
         font-family: inherit;
         display: inline-flex;
         align-items: center;
@@ -165,186 +151,270 @@
         gap: 6px;
         outline: none;
       }
-      .btn svg { width: 14px; height: 14px; stroke-width: 1.5; flex-shrink: 0; }
-      .btn:focus-visible { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--brand); }
+      .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-      .btn-primary { background: var(--brand); color: #fff; }
-      .btn-primary:hover:not(:disabled) { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(13,153,255,0.3); }
-      .btn-primary:active:not(:disabled) { background: var(--brand-active); transform: translateY(0); box-shadow: none; }
+      .btn-primary {
+        background: var(--btn-bg);
+        color: var(--text-primary);
+      }
+      .btn-primary:hover:not(:disabled) { background: var(--btn-bg-hover); }
+      .btn-primary:active:not(:disabled) { background: #4a4a4a; }
 
-      .btn-secondary { background: var(--bg-tertiary); color: var(--text); border: 1px solid var(--border); }
-      .btn-secondary:hover:not(:disabled) { background: var(--bg-elevated); border-color: var(--border-strong); }
-      .btn-secondary:active:not(:disabled) { background: var(--bg-secondary); }
+      .btn-secondary {
+        background: none;
+        color: var(--text-primary);
+        border: none;
+        padding: 0 8px;
+      }
+      .btn-secondary:hover:not(:disabled) { color: var(--brand); }
 
-      .btn-ghost { background: transparent; color: var(--text-brand); }
-      .btn-ghost:hover:not(:disabled) { background: var(--brand-muted); }
-      .btn-ghost:active:not(:disabled) { background: rgba(13,153,255,0.25); }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        height: auto;
+        padding: 14px 20px;
+        font-size: 13px;
+        font-weight: 400;
+        width: 100%;
+        max-width: 280px;
+      }
+      .btn-ghost:hover:not(:disabled) {
+        border-color: var(--text-secondary);
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.02);
+      }
 
-      .btn-danger { background: var(--danger); color: #fff; }
-      .btn-danger:hover:not(:disabled) { background: #d93d1b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(242,72,34,0.3); }
-      .btn-danger:active:not(:disabled) { background: #c03518; transform: translateY(0); }
-
-      .btn:disabled, .btn[disabled] { background: var(--bg-tertiary); color: var(--text-tertiary); cursor: not-allowed; border: 1px solid var(--border); transform: none !important; box-shadow: none !important; }
-
-      .btn-sm { height: 28px; padding: 0 10px; font-size: 12px; border-radius: var(--radius-sm); }
-      .btn-sm svg { width: 12px; height: 12px; }
-      .btn-lg { height: 44px; padding: 0 var(--sp-lg); font-size: 15px; border-radius: var(--radius-lg); }
-      .btn-lg svg { width: 16px; height: 16px; }
-      .btn-icon { padding: 0; aspect-ratio: 1; }
-      .btn-icon.btn-sm { width: 28px; }
-      .btn-icon:not(.btn-sm):not(.btn-lg) { width: 36px; }
-      .btn-icon.btn-lg { width: 44px; }
+      .btn:disabled {
+        background: var(--bg-surface);
+        color: var(--text-tertiary);
+        cursor: not-allowed;
+        transform: none !important;
+      }
 
       /* ========== FORM CONTROLS ========== */
       .input {
         width: 100%;
         height: 36px;
         padding: 0 12px;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        color: var(--text);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        color: var(--text-primary);
         font-size: 13px;
         font-family: inherit;
-        transition: all 0.2s var(--ease);
+        transition: all 0.15s ease;
         outline: none;
       }
       .input::placeholder { color: var(--text-tertiary); }
-      .input:hover { border-color: var(--border-strong); }
-      .input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(13,153,255,0.15); }
-      .input-error { border-color: var(--danger) !important; }
-      .input-error:focus { box-shadow: 0 0 0 3px rgba(242,72,34,0.15) !important; }
-      .input-label { display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
+      .input:hover { border-color: var(--border); }
+      .input:focus { border-color: var(--brand); }
 
-      /* File Input Hidden */
+      .input-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--text-tertiary);
+        margin-bottom: 8px;
+      }
+
       input[type="file"] { display: none; }
 
       /* Dropdown */
       .dropdown { position: relative; }
       .dropdown-trigger {
-        width: 100%; height: 36px; padding: 0 12px;
-        background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md);
-        color: var(--text); font-size: 13px; font-family: inherit; cursor: pointer;
-        display: flex; align-items: center; justify-content: space-between;
-        transition: all 0.2s var(--ease); outline: none;
+        width: 100%;
+        height: 40px;
+        padding: 0 16px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-family: inherit;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.15s ease;
+        outline: none;
       }
-      .dropdown-trigger:hover { border-color: var(--border-strong); background: var(--bg-tertiary); }
-      .dropdown-trigger:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(13,153,255,0.15); }
+      .dropdown-trigger:hover { border-color: var(--border); background: var(--bg-elevated); }
+      .dropdown-trigger:focus { border-color: var(--brand); }
       .dropdown-trigger svg { width: 16px; height: 16px; color: var(--text-tertiary); }
+
       .dropdown-menu {
-        position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-        background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md);
-        padding: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 10; display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0; right: 0;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        z-index: 10;
+        display: none;
       }
-      .dropdown.open .dropdown-menu { display: block; animation: dropdownIn 0.15s var(--ease); }
-      .dropdown-item {
-        padding: 8px 12px; font-size: 13px; border-radius: var(--radius-sm); cursor: pointer;
-        transition: background 0.15s; display: flex; align-items: center; gap: var(--sp-sm);
+      .dropdown.open .dropdown-menu,
+      .dropdown-menu.open { display: block; animation: dropdownIn 0.15s var(--ease); }
+
+      .dropdown-item,
+      .collection-option {
+        padding: 8px 12px;
+        font-size: 13px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
-      .dropdown-item:hover { background: var(--brand-muted); color: var(--text-brand); }
-      .dropdown-item.selected { color: var(--brand); }
-      .dropdown-item.selected::after { content: '✓'; margin-left: auto; font-size: 12px; }
+      .dropdown-item:hover,
+      .collection-option:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+      .collection-option.selected { color: var(--brand); }
+
       @keyframes dropdownIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-      /* ========== EMPTY STATE ========== */
+      /* ========== EMPTY STATE / DROP ZONE (Step 1) ========== */
       .empty-state {
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
-        text-align: center;
       }
 
-      .empty-state-icon {
-        color: var(--brand);
-        margin-bottom: var(--sp-lg);
-        opacity: 0.8;
-        transition: all 0.3s var(--ease);
-      }
-
-      .empty-state:hover .empty-state-icon {
-        opacity: 1;
-        transform: scale(1.05);
-      }
-
-      .empty-state-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: var(--sp-sm);
-      }
-
-      .empty-state-description {
-        color: var(--text-secondary);
-        font-size: 13px;
-        line-height: 20px;
-      }
-
-      /* ========== DROP ZONE ========== */
       .drop-zone {
-        border: 2px dashed var(--border);
-        border-radius: var(--radius-lg);
-        padding: var(--sp-lg) var(--sp-md);
-        transition: all 0.25s var(--ease);
-        cursor: pointer;
-        background: var(--bg-secondary);
-        max-width: 400px;
+        flex: 1;
         width: 100%;
-        text-align: center;
+        border: 1.5px dashed var(--border);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
       }
 
       .drop-zone:hover {
-        border-color: var(--brand);
-        background: var(--brand-muted);
+        border-color: var(--text-secondary);
+        background: rgba(255, 255, 255, 0.02);
       }
 
       .drop-zone.drag-over {
         border-color: var(--brand);
         border-style: solid;
-        background: rgba(13,153,255,0.12);
-        transform: scale(1.01);
+        background: rgba(13, 153, 255, 0.06);
       }
 
       .drop-zone-icon {
-        color: var(--brand);
-        margin-bottom: var(--sp-md);
-        opacity: 0.8;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        opacity: 0.85;
       }
 
       .drop-zone-text {
         font-size: 14px;
-        font-weight: 500;
-        color: var(--text-brand);
-        margin-bottom: var(--sp-xs);
+        color: var(--text-primary);
+        margin-bottom: 4px;
       }
+
+      .drop-zone-text strong { font-weight: 600; }
 
       .drop-zone-sub {
         font-size: 12px;
         color: var(--text-tertiary);
       }
 
-      /* ========== COLLECTION SELECTOR ========== */
-      .collection-selector {
-        margin-bottom: var(--sp-lg);
-      }
-
-      .collection-dropdown {
+      /* ========== FILE QUEUE (Step 1 - files loaded) ========== */
+      .file-queue {
         width: 100%;
-        position: relative;
       }
 
-      .collection-search {
-        display: none;
-        margin-bottom: var(--sp-sm);
+      .queue-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 14px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        margin-bottom: 8px;
+        transition: border-color 0.15s ease;
       }
+
+      .queue-item:hover { border-color: var(--border); }
+
+      .queue-item-name {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .queue-item-status {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      button.text {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-tertiary);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        font-size: 16px;
+        line-height: 1;
+        transition: all 0.15s ease;
+        font-family: inherit;
+      }
+      button.text:hover { color: var(--danger); background: rgba(242, 72, 34, 0.1); }
+
+      .add-more-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px dashed var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 13px;
+        color: var(--text-secondary);
+        background: transparent;
+        font-family: inherit;
+        outline: none;
+      }
+      .add-more-btn:hover {
+        border-color: var(--text-secondary);
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .add-more-btn svg { width: 14px; height: 14px; }
+
+      /* ========== COLLECTION SELECTOR (Step 2) ========== */
+      .collection-selector { margin-bottom: 20px; }
+      .collection-dropdown { width: 100%; position: relative; }
+
+      .collection-search { display: none; margin-bottom: 8px; }
 
       .collection-list {
         max-height: 200px;
         overflow-y: auto;
-        background: var(--bg-secondary);
+        background: var(--bg-surface);
         border: 1px solid var(--border);
-        border-radius: var(--radius-md);
+        border-radius: 8px;
         display: none;
         position: absolute;
         width: 100%;
@@ -353,197 +423,143 @@
         box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         padding: 4px;
       }
-
-      .collection-list.open {
-        display: block;
-        animation: dropdownIn 0.15s var(--ease);
-      }
-
-      .collection-option {
-        padding: 8px 12px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-radius: var(--radius-sm);
-        transition: background 0.15s;
-        font-size: 13px;
-      }
-
-      .collection-option:hover {
-        background: var(--brand-muted);
-        color: var(--text-brand);
-      }
-
-      .collection-option.selected {
-        color: var(--brand);
-      }
+      .collection-list.open { display: block; animation: dropdownIn 0.15s var(--ease); }
 
       .collection-option-new {
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
         font-weight: 500;
       }
 
       .collection-badge {
         font-size: 11px;
-        font-weight: 600;
-        color: var(--text-secondary);
-        background: var(--bg-tertiary);
-        padding: 4px 10px;
-        border-radius: var(--radius-full);
-        border: 1px solid var(--border);
+        font-weight: 500;
+        color: var(--text-tertiary);
+        background: var(--bg-elevated);
+        padding: 2px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
+        margin-left: auto;
       }
 
-      /* ========== TOKEN PREVIEW ========== */
+      /* ========== TOKEN PREVIEW (Step 2) ========== */
       .token-preview {
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border);
-        padding: var(--sp-md);
-        margin-bottom: var(--sp-lg);
-        max-height: 320px;
-        overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--bg-surface);
+        border-radius: 10px;
+        padding: 16px;
       }
 
-      .token-group {
-        margin-bottom: var(--sp-md);
-      }
-
-      .token-group:last-child {
-        margin-bottom: 0;
-      }
+      .token-group { margin-bottom: 12px; }
+      .token-group:last-child { margin-bottom: 0; }
 
       .token-group-header {
         display: flex;
         align-items: center;
-        gap: var(--sp-sm);
-        margin-bottom: var(--sp-sm);
+        gap: 10px;
+        margin-bottom: 10px;
         font-weight: 600;
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .token-count {
         font-size: 11px;
-        font-weight: 600;
-        color: var(--text-secondary);
-        background: var(--bg-tertiary);
-        padding: 4px 10px;
-        border-radius: var(--radius-full);
-        border: 1px solid var(--border);
+        font-weight: 500;
+        color: var(--text-tertiary);
+        background: var(--bg-elevated);
+        padding: 2px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
       }
 
       .token-list {
-        display: grid;
-        gap: var(--sp-sm);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        overflow-y: auto;
       }
 
       .token-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: var(--sp-sm) var(--sp-md);
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        font-size: 12px;
-        transition: border-color 0.2s var(--ease);
-      }
-
-      .token-item:hover {
-        border-color: var(--border-strong);
+        padding: 11px 14px;
+        background: var(--bg-token);
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 13px;
+        flex-shrink: 0;
       }
 
       .token-name {
-        font-family: 'SF Mono', monospace;
-        color: var(--text);
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 13px;
+        color: var(--text-primary);
       }
 
       .token-value {
         display: flex;
         align-items: center;
-        gap: var(--sp-xs);
+        gap: 8px;
         color: var(--text-secondary);
+        font-size: 12px;
       }
 
       .color-swatch {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+
+      /* ========== SUCCESS (Step 3) ========== */
+      .success-icon {
+        width: 56px;
+        height: 56px;
+        background: var(--success-bg);
         border-radius: 50%;
-        border: 1px solid var(--border);
-      }
-
-      /* ========== FILE QUEUE ========== */
-      .file-queue {
-        margin-bottom: var(--sp-lg);
-        width: 100%;
-        max-width: 400px;
-      }
-
-      .queue-item {
-        display: flex;
-        align-items: center;
-        gap: var(--sp-md);
-        padding: var(--sp-sm) var(--sp-md);
-        background: var(--bg-secondary);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        margin-bottom: var(--sp-sm);
-        transition: border-color 0.2s var(--ease);
-      }
-
-      .queue-item:hover {
-        border-color: var(--border-strong);
-      }
-
-      .queue-item-name {
-        flex: 1;
-        font-size: 12px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .queue-item-status {
-        font-size: 11px;
-        color: var(--text-tertiary);
-      }
-
-      .add-more-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        width: 100%;
-        padding: var(--sp-sm) var(--sp-md);
-        margin-top: var(--sp-sm);
-        background: transparent;
-        border: 1px dashed var(--border);
-        border-radius: var(--radius-md);
-        color: var(--text-brand);
-        font-size: 12px;
-        font-weight: 500;
-        font-family: inherit;
-        cursor: pointer;
-        transition: all 0.2s var(--ease);
-        outline: none;
+        margin-bottom: 20px;
+        animation: scaleIn 0.4s ease-out;
       }
-      .add-more-btn:hover {
-        background: var(--brand-muted);
-        border-color: var(--brand);
+      .success-icon svg { width: 28px; height: 28px; color: var(--success); }
+
+      @keyframes scaleIn {
+        0% { transform: scale(0); opacity: 0; }
+        60% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
       }
 
-      .queue-item-progress {
-        width: 48px;
-        height: 4px;
-        background: var(--border);
-        border-radius: 2px;
-        overflow: hidden;
+      .empty-state-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        text-align: center;
+        letter-spacing: -0.01em;
+        opacity: 0;
+        animation: fadeIn 0.4s 0.2s ease-out forwards;
       }
 
-      .queue-item-progress-bar {
-        height: 100%;
-        background: var(--brand);
-        transition: width 0.3s var(--ease);
+      .empty-state-description {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 32px;
+        max-width: 260px;
+        opacity: 0;
+        animation: fadeIn 0.4s 0.3s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       /* ========== TOAST NOTIFICATIONS ========== */
@@ -556,125 +572,52 @@
         pointer-events: none;
         display: flex;
         flex-direction: column;
-        gap: var(--sp-sm);
+        gap: 8px;
       }
 
       .toast {
         display: flex;
         align-items: center;
-        gap: var(--sp-sm);
-        padding: 10px var(--sp-md);
-        border-radius: var(--radius-md);
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 8px;
         font-size: 13px;
         font-weight: 500;
         pointer-events: auto;
         animation: toastIn 0.3s var(--ease);
         transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
       }
-      .toast svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-      .toast.success {
-        background: rgba(20,174,92,0.12);
-        color: var(--success);
-        border-left: 3px solid var(--success);
-      }
+      .toast.success { background: rgba(52,199,89,0.12); color: var(--success); border-left: 3px solid var(--success); }
+      .toast.error { background: rgba(242,72,34,0.12); color: var(--danger); border-left: 3px solid var(--danger); }
+      .toast.warning { background: rgba(245,166,35,0.12); color: var(--warning); border-left: 3px solid var(--warning); }
+      .toast.info { background: rgba(162,89,255,0.12); color: var(--info); border-left: 3px solid var(--info); }
+      .toast.hiding { opacity: 0; transform: translateY(100%); }
 
-      .toast.error {
-        background: rgba(242,72,34,0.12);
-        color: var(--danger);
-        border-left: 3px solid var(--danger);
-      }
-
-      .toast.warning {
-        background: rgba(245,166,35,0.12);
-        color: var(--warning);
-        border-left: 3px solid var(--warning);
-      }
-
-      .toast.info {
-        background: rgba(162,89,255,0.12);
-        color: var(--info);
-        border-left: 3px solid var(--info);
-      }
-
-      .toast.hiding {
-        opacity: 0;
-        transform: translateY(100%);
-      }
-
-      @keyframes toastIn {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+      @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
       /* ========== LOADING SPINNER ========== */
       .spinner {
         width: 16px;
         height: 16px;
         border: 2px solid var(--border);
-        border-top-color: var(--brand);
+        border-top-color: var(--text-primary);
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
+      @keyframes spin { to { transform: rotate(360deg); } }
 
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-
-      /* ========== SUCCESS CHECKMARK ========== */
-      .checkmark {
-        width: 64px;
-        height: 64px;
-        margin-bottom: var(--sp-xl);
-      }
-
-      .checkmark-circle {
-        stroke: var(--success);
-        stroke-width: 2;
-        fill: none;
-        stroke-dasharray: 100;
-        stroke-dashoffset: 100;
-        animation: checkmark-circle 0.4s var(--ease) forwards;
-      }
-
-      .checkmark-check {
-        stroke: var(--success);
-        stroke-width: 2;
-        fill: none;
-        stroke-dasharray: 20;
-        stroke-dashoffset: 20;
-        animation: checkmark-check 0.3s 0.4s var(--ease) forwards;
-      }
-
-      @keyframes checkmark-circle {
-        to { stroke-dashoffset: 0; }
-      }
-
-      @keyframes checkmark-check {
-        to { stroke-dashoffset: 0; }
-      }
-
-      /* ========== SCROLLBAR ========== */
-      ::-webkit-scrollbar { width: 6px; height: 6px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
-      ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
-
-      /* ========== BACKWARD COMPAT (for classes used in ui.ts) ========== */
-      button.text { background: transparent; color: var(--text-brand); padding: 0 var(--sp-sm); border: none; height: 32px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s var(--ease); display: inline-flex; align-items: center; justify-content: center; }
-      button.text:hover:not(:disabled) { background: var(--brand-muted); }
-      button.secondary { background: var(--bg-tertiary); color: var(--text); border: 1px solid var(--border); height: 36px; padding: 0 var(--sp-md); border-radius: var(--radius-md); font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s var(--ease); display: inline-flex; align-items: center; justify-content: center; gap: 6px; outline: none; }
-      button.secondary:hover:not(:disabled) { background: var(--bg-elevated); border-color: var(--border-strong); }
-
-      /* ========== FOOTER ACTIONS ========== */
+      /* ========== FOOTER ========== */
       .footer-actions {
         display: flex;
-        gap: var(--sp-sm);
-        justify-content: center;
-        padding: var(--sp-md) var(--sp-lg);
-        background: var(--bg);
-        border-top: 1px solid var(--border);
+        align-items: center;
+        gap: 16px;
+        padding: 14px 20px 18px;
+        background: var(--footer-bg);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        flex-shrink: 0;
       }
+
       .footer-actions .btn,
       .footer-actions button {
         display: inline-flex !important;
@@ -685,95 +628,130 @@
       .footer-actions button[style*="display: none"] {
         display: none !important;
       }
+
+      .footer-spacer { flex: 1; }
+
+      /* ========== SCROLLBAR ========== */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+      /* Spacer utility */
+      .flex-spacer { flex: 1; }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- Progress Dots -->
-      <div class="progress-dots step-indicators">
-        <div class="progress-dot step-dot active" data-step="1"></div>
-        <div class="progress-dot step-dot" data-step="2"></div>
-        <div class="progress-dot step-dot" data-step="3"></div>
-      </div>
+      <!-- Header -->
+      <header class="header">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0Z" fill="black"/>
+          <path d="M8.66666 12L12 15.3333M12 15.3333L15.3333 12M12 15.3333V8.66667M20.3333 12C20.3333 16.6024 16.6024 20.3333 12 20.3333C7.39762 20.3333 3.66666 16.6024 3.66666 12C3.66666 7.39763 7.39762 3.66667 12 3.66667C16.6024 3.66667 20.3333 7.39763 20.3333 12Z" stroke="#F5F5F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">FigmaTokenImporter</span>
+      </header>
 
       <!-- Step 1: Upload -->
       <div class="step-container" data-step="1" data-active="true">
         <div class="empty-state">
           <div class="drop-zone" id="drop-zone">
             <input type="file" id="file-input" accept=".json,.csv" multiple />
-            <div class="drop-zone-icon"><i data-feather="upload" style="width:32px;height:32px"></i></div>
-            <div class="drop-zone-text">Choose Files</div>
-            <div class="drop-zone-sub">or drag & drop .json / .csv here</div>
+            <div class="drop-zone-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 16.7428C21.2215 15.734 22 14.2079 22 12.5C22 9.46243 19.5376 7 16.5 7C16.2815 7 16.0771 6.886 15.9661 6.69774C14.6621 4.48484 12.2544 3 9.5 3C5.35786 3 2 6.35786 2 10.5C2 12.5661 2.83545 14.4371 4.18695 15.7935" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="drop-zone-text"><strong>Click to upload</strong> or drag and drop</div>
+            <div class="drop-zone-sub">.JSON or .CSV file format</div>
           </div>
         </div>
+      </div>
 
-        <!-- File Queue (hidden initially) -->
-        <div class="file-queue" id="file-queue" style="display: none">
-          <div class="title" style="margin: var(--sp-md) 0 var(--sp-sm)">Files to import</div>
+      <!-- Step 2: Files Loaded -->
+      <div class="step-container" data-step="2">
+        <div class="file-queue" id="file-queue">
+          <div class="title" style="margin-bottom: 16px">Files to Import</div>
           <div id="queue-list"></div>
           <button class="add-more-btn" id="add-more-btn">
-            <i data-feather="plus" style="width:14px;height:14px"></i> Add more files
+            <svg viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Add more files
           </button>
+          <div class="flex-spacer"></div>
         </div>
       </div>
 
-      <!-- Step 2: Configure -->
-      <div class="step-container" data-step="2">
-        <div style="width: 100%; max-width: 400px">
-          <div class="title" style="margin-bottom: var(--sp-lg); text-align: center">Configure Import</div>
+      <!-- Step 3: Configure -->
+      <div class="step-container" data-step="3">
+        <div class="title" style="margin-bottom: 20px">Configure Import</div>
 
-          <!-- Collection Selector -->
-          <div class="collection-selector">
-            <label class="input-label">Import to collection</label>
-            <div class="collection-dropdown dropdown">
-              <button id="collection-select-btn" class="dropdown-trigger">
-                <span id="collection-select-text">New Collection</span>
-                <i data-feather="chevron-down"></i>
-              </button>
-              <div class="collection-list dropdown-menu" id="collection-list">
-                <input type="search" class="input collection-search" id="collection-search" placeholder="Search collections..." style="display: none" />
-                <div id="collection-options"></div>
-              </div>
+        <!-- Collection Selector -->
+        <div class="collection-selector">
+          <label class="input-label">Import to collection</label>
+          <div class="collection-dropdown dropdown">
+            <button id="collection-select-btn" class="dropdown-trigger">
+              <span id="collection-select-text">New Collection</span>
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="collection-list dropdown-menu" id="collection-list">
+              <input type="search" class="input collection-search" id="collection-search" placeholder="Search collections..." style="display: none" />
+              <div id="collection-options"></div>
             </div>
           </div>
-
-          <!-- Token Preview -->
-          <div class="token-preview" id="token-preview">
-            <div class="caption">Preview</div>
-            <div id="preview-content"></div>
-          </div>
         </div>
+
+        <!-- Token Preview -->
+        <div class="token-preview" id="token-preview">
+          <div class="caption" style="margin-bottom: 12px">Preview</div>
+          <div id="preview-content" style="flex: 1; overflow-y: auto;"></div>
+        </div>
+
       </div>
 
-      <!-- Step 3: Success -->
-      <div class="step-container" data-step="3">
-        <div class="empty-state">
-          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <circle class="checkmark-circle" cx="12" cy="12" r="10" />
-            <path class="checkmark-check" d="M8 12l3 3 5-5" />
-          </svg>
+      <!-- Step 4: Success -->
+      <div class="step-container" data-step="4" style="align-items: center;">
+        <div class="flex-spacer"></div>
+        <div class="empty-state" style="flex: none;">
+          <!-- Success Icon -->
+          <div class="success-icon">
+            <svg viewBox="0 0 28 28" fill="none"><path d="M6 14L11.5 19.5L22 8.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
           <div class="empty-state-title">Import Successful</div>
           <div class="empty-state-description" id="success-message">Tokens have been imported to Figma</div>
-          <button id="import-another" class="btn btn-ghost" style="margin-top: var(--sp-lg)"><i data-feather="plus"></i> Import another file</button>
+          <button id="import-another" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Import another file
+          </button>
         </div>
+        <div class="flex-spacer"></div>
+      </div>
+
+      <!-- Progress Dots (shared, fixed above footer) -->
+      <div class="progress-dots">
+        <div class="step-dot active" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+        <div class="step-dot" data-step="4"></div>
       </div>
 
       <!-- Footer Actions -->
       <div class="footer-actions">
+        <button id="back-btn" class="btn btn-secondary" style="display: none">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
         <button id="cancel-btn" class="btn btn-secondary" style="display: none">Cancel</button>
-        <button id="back-btn" class="btn btn-secondary" style="display: none"><i data-feather="arrow-left"></i> Back</button>
-        <button id="next-btn" class="btn btn-primary" style="display: none">Next <i data-feather="arrow-right"></i></button>
-        <button id="import-btn" class="btn btn-primary" style="display: none"><i data-feather="download"></i> Import Tokens</button>
+        <div class="footer-spacer"></div>
+        <button id="next-btn" class="btn btn-primary" style="display: none">Next</button>
+        <button id="import-btn" class="btn btn-primary" style="display: none">Import Tokens</button>
+        <button id="close-btn" class="btn btn-primary" style="display: none">Close</button>
       </div>
 
       <!-- Toast Container -->
       <div class="toast-container" id="toast-container"></div>
     </div>
 
-    <script>
-      // Init Feather icons
-      feather.replace();
-    </script>
     <script src="ui.js"></script>
   </body>
 </html>

@@ -1,5 +1,7 @@
 # Figma Token Importer Plugin
 
+<img src="assets/icon.svg" alt="Figma Token Importer Logo" width="64" height="64" align="right" />
+
 A Figma plugin that imports design tokens from JSON or CSV files directly into Figma Variables.
 
 ## Features
@@ -207,4 +209,5 @@ figma.ui.postMessage({ type: "import-success", message: "..." });
 5. Share your tokens across team files
 
 Happy coding! 🚀
+
 # FigmaTokenImporterPlugin

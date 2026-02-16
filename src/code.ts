@@ -3,12 +3,12 @@
 
 declare const figma: any;
 
-// Import types
+// Types
 type ParsedTokens = Record<string, Record<string, string | number | boolean>>;
 
 // Show the UI (HTML will be injected by build script)
 // @ts-ignore - __html__ is a placeholder replaced during build
-figma.showUI(__html__, { width: 440, height: 600 });
+figma.showUI(__html__, { width: 360, height: 640 });
 
 // Listen for messages from the UI
 figma.ui.onmessage = async (msg: any) => {
@@ -37,11 +37,13 @@ figma.ui.onmessage = async (msg: any) => {
         collections: collectionNames 
       });
     } catch (error) {
-      figma.ui.postMessage({ 
-        type: 'collections-list', 
-        collections: [] 
+      figma.ui.postMessage({
+        type: 'collections-list',
+        collections: []
       });
     }
+  } else if (msg.type === 'close') {
+    figma.closePlugin();
   }
 };
 

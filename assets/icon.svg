@@ -1,0 +1,18 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular background -->
+  <circle cx="64" cy="64" r="64" fill="#FAFAFA"/>
+  
+  <!-- Flat diamond (not rotated) -->
+  <g id="diamond">
+    <!-- Main diamond shape -->
+    <path d="M 64 32 L 96 64 L 64 96 L 32 64 Z" fill="#0D0D0D"/>
+    
+    <!-- Import arrow pointing into diamond -->
+    <g id="import-arrow">
+      <!-- Arrow line -->
+      <rect x="20" y="62" width="28" height="4" fill="#6B6B6B"/>
+      <!-- Arrow head -->
+      <path d="M 46 64 L 54 56 L 54 60 L 48 60 L 48 68 L 54 68 L 54 72 Z" fill="#6B6B6B"/>
+    </g>
+  </g>
+</svg>

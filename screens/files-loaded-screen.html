@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Files Loaded - Figma Token Importer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #2c2c2c;
+        --bg-surface: #383838;
+        --bg-elevated: #3a3a3c;
+        --border: #555555;
+        --border-light: #4a4a4a;
+        --text-primary: #ffffff;
+        --text-secondary: #b3b3b3;
+        --text-tertiary: #8c8c8c;
+        --brand: #0d99ff;
+        --danger: #f24822;
+        --dot-active: #ffffff;
+        --dot-inactive: #555555;
+        --btn-bg: #383838;
+        --btn-bg-hover: #444444;
+        --footer-bg: #242424;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        width: 360px;
+        height: 640px;
+        display: flex;
+        flex-direction: column;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 20px;
+      }
+
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+
+      .logo-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+      }
+
+      /* Content */
+      .content {
+        flex: 1;
+        padding: 8px 20px 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        letter-spacing: -0.01em;
+      }
+
+      /* File Item */
+      .file-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 14px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        margin-bottom: 8px;
+      }
+
+      .file-name {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .file-size {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-tertiary);
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+      }
+
+      .delete-btn:hover {
+        color: var(--danger);
+        background: rgba(242, 72, 34, 0.1);
+      }
+
+      .delete-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* Add More Files */
+      .add-more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border: 1.5px dashed var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 13px;
+        color: var(--text-secondary);
+        background: transparent;
+        width: 100%;
+        font-family: inherit;
+      }
+
+      .add-more:hover {
+        border-color: var(--text-secondary);
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .add-more svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      /* Spacer */
+      .spacer {
+        flex: 1;
+      }
+
+      /* Progress Dots */
+      .progress-dots {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        padding: 20px 0;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--dot-inactive);
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        background: var(--dot-active);
+      }
+
+      /* Footer */
+      .footer {
+        padding: 14px 20px 18px;
+        display: flex;
+        justify-content: flex-end;
+        background: var(--footer-bg);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .btn-next {
+        height: 40px;
+        padding: 0 28px;
+        background: var(--btn-bg);
+        color: var(--text-primary);
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s ease;
+      }
+
+      .btn-next:hover {
+        background: var(--btn-bg-hover);
+      }
+
+      .btn-next:active {
+        background: #4a4a4a;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0Z" fill="black"/>
+        <path d="M8.66666 12L12 15.3333M12 15.3333L15.3333 12M12 15.3333V8.66667M20.3333 12C20.3333 16.6024 16.6024 20.3333 12 20.3333C7.39762 20.3333 3.66666 16.6024 3.66666 12C3.66666 7.39763 7.39762 3.66667 12 3.66667C16.6024 3.66667 20.3333 7.39763 20.3333 12Z" stroke="#F5F5F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-text">FigmaTokenImporter</span>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+      <h2 class="section-title">Files to Import</h2>
+
+      <!-- File List -->
+      <div class="file-list" id="fileList">
+        <div class="file-item">
+          <span class="file-name">Samples-token.json</span>
+          <span class="file-size">16 MB</span>
+          <button class="delete-btn" title="Remove file">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H3.33333H14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.33334 4V2.66667C5.33334 2.31305 5.47382 1.97391 5.72387 1.72386C5.97392 1.47381 6.31305 1.33334 6.66668 1.33334H9.33334C9.68696 1.33334 10.0261 1.47381 10.2762 1.72386C10.5262 1.97391 10.6667 2.31305 10.6667 2.66667V4M12.6667 4V13.3333C12.6667 13.687 12.5262 14.0261 12.2762 14.2761C12.0261 14.5262 11.687 14.6667 11.3333 14.6667H4.66668C4.31305 14.6667 3.97392 14.5262 3.72387 14.2761C3.47382 14.0261 3.33334 13.687 3.33334 13.3333V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Add More Files -->
+      <button class="add-more" id="addMoreBtn">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Add more files
+      </button>
+      <input type="file" id="fileInput" accept=".json,.csv" />
+
+      <div class="spacer"></div>
+
+      <!-- Progress Dots -->
+      <div class="progress-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <button class="btn-next" id="nextBtn">Next</button>
+    </footer>
+
+    <script>
+      const addMoreBtn = document.getElementById('addMoreBtn');
+      const fileInput = document.getElementById('fileInput');
+
+      addMoreBtn.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          parent.postMessage({ pluginMessage: { type: 'add-files', files: e.target.files } }, '*');
+        }
+      });
+
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        parent.postMessage({ pluginMessage: { type: 'navigate', screen: 'configure' } }, '*');
+      });
+
+      // Delete file buttons
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fileItem = btn.closest('.file-item');
+          fileItem.remove();
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload - Figma Token Importer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-      /* Apple Design System - SF Pro Font Stack */
       * {
         margin: 0;
         padding: 0;
@@ -13,281 +15,191 @@
       }
 
       :root {
-        /* Apple Design System Colors - Dark Mode */
-        --apple-black: #000000;
-        --apple-gray-6: #1d1d1f;
-        --apple-gray-5: #2c2c2e;
-        --apple-gray-4: #3a3a3c;
-        --apple-gray-3: #48484a;
-        --apple-gray-2: #636366;
-        --apple-gray-1: #8e8e93;
-        --apple-white: #ffffff;
-        --apple-blue: #007aff;
-        --apple-green: #34c759;
-        --apple-red: #ff3b30;
-        --apple-yellow: #ffcc00;
-
-        /* Semantic Colors */
-        --background: #1a1a1c;
-        --background-secondary: #242426;
-        --background-tertiary: #2e2e30;
-        --label: var(--apple-white);
-        --label-secondary: rgba(255, 255, 255, 0.55);
-        --label-tertiary: rgba(255, 255, 255, 0.25);
-        --separator: rgba(255, 255, 255, 0.1);
-
-        /* Spacing (8pt grid) */
-        --spacing-xs: 4px;
-        --spacing-s: 8px;
-        --spacing-m: 16px;
-        --spacing-l: 24px;
-        --spacing-xl: 32px;
-        --spacing-xxl: 48px;
-
-        /* Border Radius */
-        --radius-s: 2px;
-        --radius-m: 2px;
-        --radius-l: 2px;
-        --radius-xl: 2px;
+        --bg: #2c2c2c;
+        --bg-surface: #383838;
+        --bg-elevated: #3a3a3c;
+        --border: #555555;
+        --border-light: #4a4a4a;
+        --text-primary: #ffffff;
+        --text-secondary: #b3b3b3;
+        --text-tertiary: #8c8c8c;
+        --brand: #0d99ff;
+        --dot-active: #ffffff;
+        --dot-inactive: #555555;
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
-        background: var(--background);
-        color: var(--label);
-        width: 440px;
-        height: 600px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        width: 360px;
+        height: 640px;
         display: flex;
         flex-direction: column;
         -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
       }
 
-      /* Navigation Bar */
-      .navigation-bar {
-        padding: var(--spacing-m) var(--spacing-l);
-        background: var(--background);
+      /* Header */
+      .header {
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 60px;
+        gap: 10px;
+        padding: 16px 20px;
       }
 
-      .progress-indicator {
-        display: flex;
-        gap: var(--spacing-s);
+      .logo-icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
       }
 
-      .progress-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--apple-gray-3);
-        transition: all 0.3s ease;
+      .logo-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
       }
 
-      .progress-dot.active {
-        background: var(--apple-blue);
-        transform: scale(1.25);
-      }
-
-      /* Content Area */
+      /* Content */
       .content {
         flex: 1;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: var(--spacing-xl);
-      }
-
-      /* Icon Container */
-      .icon-container {
-        margin-bottom: var(--spacing-l);
-      }
-
-      .icon {
-        width: 64px;
-        height: 64px;
-        color: var(--apple-blue);
-      }
-
-      /* Text Styles */
-      .title {
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        margin-bottom: var(--spacing-s);
-        text-align: center;
-      }
-
-      .subtitle {
-        font-size: 15px;
-        color: var(--label-secondary);
-        text-align: center;
-        line-height: 1.4;
-        margin-bottom: var(--spacing-xl);
+        padding: 8px 20px 0;
       }
 
       /* Drop Zone */
       .drop-zone {
-        width: 100%;
-        max-width: 320px;
-        padding: var(--spacing-xxl) var(--spacing-l);
-        background: var(--background-secondary);
-        border: 2px dashed var(--apple-gray-3);
-        border-radius: var(--radius-l);
+        flex: 1;
+        border: 1.5px dashed var(--border);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         transition: all 0.2s ease;
-        text-align: center;
       }
 
       .drop-zone:hover {
-        background: var(--background-tertiary);
-        border-color: var(--apple-blue);
-        transform: scale(1.02);
+        border-color: var(--text-secondary);
+        background: rgba(255, 255, 255, 0.02);
       }
 
       .drop-zone.drag-over {
-        background: rgba(0, 122, 255, 0.1);
-        border-color: var(--apple-blue);
+        border-color: var(--brand);
         border-style: solid;
+        background: rgba(13, 153, 255, 0.06);
+      }
+
+      .upload-icon {
+        width: 36px;
+        height: 36px;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        opacity: 0.85;
       }
 
       .drop-zone-text {
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--apple-blue);
-        margin-bottom: var(--spacing-xs);
+        font-size: 14px;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+      }
+
+      .drop-zone-text strong {
+        font-weight: 600;
       }
 
       .drop-zone-subtext {
-        font-size: 13px;
-        color: var(--label-tertiary);
+        font-size: 12px;
+        color: var(--text-tertiary);
       }
 
       input[type="file"] {
         display: none;
       }
 
-      /* Footer */
-      .footer {
-        padding: var(--spacing-l);
-        background: var(--background);
+      /* Progress Dots */
+      .progress-dots {
         display: flex;
+        gap: 8px;
         justify-content: center;
-        gap: var(--spacing-m);
+        padding: 20px 0 24px;
       }
 
-      /* Buttons - Apple Style */
-      .button {
-        height: 44px;
-        min-width: 100px;
-        padding: 0 var(--spacing-l);
-        border-radius: var(--radius-m);
-        font-size: 17px;
-        font-weight: 500;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: inherit;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--spacing-s);
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--dot-inactive);
+        transition: all 0.3s ease;
       }
 
-      .button-primary {
-        background: var(--apple-blue);
-        color: white;
-      }
-
-      .button-primary:hover {
-        background: #0051d5;
-      }
-
-      .button-primary:active {
-        background: #003d99;
-      }
-
-      .button-primary:disabled {
-        background: var(--apple-gray-4);
-        color: var(--label-tertiary);
-        cursor: not-allowed;
+      .dot.active {
+        background: var(--dot-active);
       }
     </style>
   </head>
   <body>
-    <!-- Navigation -->
-    <nav class="navigation-bar">
-      <div class="progress-indicator">
-        <div class="progress-dot active"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-      </div>
-    </nav>
+    <!-- Header -->
+    <header class="header">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C18.6274 0 24 5.37258 24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0Z" fill="black"/>
+        <path d="M8.66666 12L12 15.3333M12 15.3333L15.3333 12M12 15.3333V8.66667M20.3333 12C20.3333 16.6024 16.6024 20.3333 12 20.3333C7.39762 20.3333 3.66666 16.6024 3.66666 12C3.66666 7.39763 7.39762 3.66667 12 3.66667C16.6024 3.66667 20.3333 7.39763 20.3333 12Z" stroke="#F5F5F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-text">FigmaTokenImporter</span>
+    </header>
 
-    <!-- Main Content -->
+    <!-- Content -->
     <main class="content">
-      <div class="icon-container">
-        <svg class="icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="12" y="8" width="40" height="48" rx="4" stroke="currentColor" stroke-width="2" />
-          <path d="M20 24h24M20 32h24M20 40h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <circle cx="32" cy="48" r="8" fill="currentColor" opacity="0.2" />
-          <path d="M32 44v8M28 48h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </div>
-
-      <h1 class="title">Import Design Tokens</h1>
-      <p class="subtitle">Upload your JSON or CSV file containing design tokens to import them into Figma variables.</p>
-
       <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" accept=".json,.csv" multiple />
-        <div class="drop-zone-text">Choose Files</div>
-        <div class="drop-zone-subtext">or drag and drop here</div>
+        <input type="file" id="fileInput" accept=".json,.csv" />
+        <!-- Cloud Upload Icon -->
+        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 16V8M12 8L9 11M12 8L15 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 16.7428C21.2215 15.734 22 14.2079 22 12.5C22 9.46243 19.5376 7 16.5 7C16.2815 7 16.0771 6.886 15.9661 6.69774C14.6621 4.48484 12.2544 3 9.5 3C5.35786 3 2 6.35786 2 10.5C2 12.5661 2.83545 14.4371 4.18695 15.7935" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="drop-zone-text"><strong>Click to upload</strong> or drag and drop</div>
+        <div class="drop-zone-subtext">.JSON or .CSV file format</div>
       </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <button class="button button-primary" disabled id="nextButton">Next</button>
-    </footer>
+    <!-- Progress Dots -->
+    <div class="progress-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
 
     <script>
-      // File handling logic
-      const dropZone = document.getElementById("dropZone");
-      const fileInput = document.getElementById("fileInput");
-      const nextButton = document.getElementById("nextButton");
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
 
-      dropZone.addEventListener("click", () => fileInput.click());
+      dropZone.addEventListener('click', () => fileInput.click());
 
-      dropZone.addEventListener("dragover", (e) => {
+      dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        dropZone.classList.add("drag-over");
+        dropZone.classList.add('drag-over');
       });
 
-      dropZone.addEventListener("dragleave", () => {
-        dropZone.classList.remove("drag-over");
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
       });
 
-      dropZone.addEventListener("drop", (e) => {
+      dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
-        dropZone.classList.remove("drag-over");
-        handleFiles(e.dataTransfer.files);
-      });
-
-      fileInput.addEventListener("change", (e) => {
-        handleFiles(e.target.files);
-      });
-
-      function handleFiles(files) {
-        if (files.length > 0) {
-          nextButton.disabled = false;
-          // Update drop zone text
-          const text = dropZone.querySelector(".drop-zone-text");
-          text.textContent = `${files.length} file${files.length > 1 ? "s" : ""} selected`;
+        dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) {
+          parent.postMessage({ pluginMessage: { type: 'files-selected', files: e.dataTransfer.files } }, '*');
         }
-      }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          parent.postMessage({ pluginMessage: { type: 'files-selected', files: e.target.files } }, '*');
+        }
+      });
     </script>
   </body>
 </html>

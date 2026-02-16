@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FigmaTokenImporter Logo Preview</title>
+    <link rel="icon" type="image/png" href="favicon-24.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .logo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .logo-display {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+        }
+        
+        .logo-display.dark {
+            background: #0d0d0d;
+        }
+        
+        .logo-display img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .logo-info {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+        
+        .logo-title {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .actual-size {
+            display: inline-block;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .color-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .color-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .color-label {
+            font-size: 12px;
+            color: #8c8c8c;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FigmaTokenImporter Logo Preview</h1>
+        
+        <div class="logo-grid">
+            <!-- Main Icon SVG -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <img src="icon.svg" alt="Main Logo SVG" style="width: 128px; height: 128px;">
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Main Icon (SVG)</div>
+                    <div>128 × 128px</div>
+                    <div>icon.svg</div>
+                </div>
+            </div>
+            
+            <!-- Standard PNG -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <img src="icon.png" alt="Standard PNG" style="width: 128px; height: 128px;">
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Standard PNG</div>
+                    <div>128 × 128px</div>
+                    <div>icon.png</div>
+                </div>
+            </div>
+            
+            <!-- Retina PNG -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <img src="icon@2x.png" alt="Retina PNG" style="width: 128px; height: 128px;">
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Retina PNG</div>
+                    <div>256 × 256px (displayed at 128px)</div>
+                    <div>icon@2x.png</div>
+                </div>
+            </div>
+            
+            <!-- Favicon SVG -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <img src="favicon-24.svg" alt="Favicon SVG" style="width: 24px; height: 24px;">
+                    <div class="actual-size">
+                        <img src="favicon-24.svg" alt="Actual size" style="width: 24px; height: 24px;">
+                        <div style="margin-top: 8px; font-size: 11px; color: #8c8c8c;">Actual size</div>
+                    </div>
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Favicon (SVG)</div>
+                    <div>24 × 24px</div>
+                    <div>favicon-24.svg</div>
+                </div>
+            </div>
+            
+            <!-- Favicon PNG -->
+            <div class="logo-card">
+                <div class="logo-display">
+                    <img src="favicon-24.png" alt="Favicon PNG" style="width: 24px; height: 24px;">
+                    <div class="actual-size">
+                        <img src="favicon-24.png" alt="Actual size" style="width: 24px; height: 24px;">
+                        <div style="margin-top: 8px; font-size: 11px; color: #8c8c8c;">Actual size</div>
+                    </div>
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Favicon (PNG)</div>
+                    <div>24 × 24px</div>
+                    <div>favicon-24.png</div>
+                </div>
+            </div>
+            
+            <!-- Dark Background Test -->
+            <div class="logo-card">
+                <div class="logo-display dark">
+                    <img src="icon.svg" alt="Logo on dark" style="width: 64px; height: 64px;">
+                </div>
+                <div class="logo-info">
+                    <div class="logo-title">Dark Background Test</div>
+                    <div>Visibility check</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Color Palette -->
+        <div class="color-palette">
+            <div class="color-chip">
+                <div class="color-box" style="background: #0D0D0D;"></div>
+                <div class="color-label">#0D0D0D</div>
+            </div>
+            <div class="color-chip">
+                <div class="color-box" style="background: #3A3A3A;"></div>
+                <div class="color-label">#3A3A3A</div>
+            </div>
+            <div class="color-chip">
+                <div class="color-box" style="background: #4A4A4A;"></div>
+                <div class="color-label">#4A4A4A</div>
+            </div>
+            <div class="color-chip">
+                <div class="color-box" style="background: #6B6B6B;"></div>
+                <div class="color-label">#6B6B6B</div>
+            </div>
+            <div class="color-chip">
+                <div class="color-box" style="background: #FAFAFA;"></div>
+                <div class="color-label">#FAFAFA</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,4 @@
 // UI script - handles file upload and parsing
-declare var feather: any;
 
 type ParsedTokens = Record<string, Record<string, string | number | boolean>>;
 
@@ -36,6 +35,7 @@ const backBtn = document.getElementById('back-btn') as HTMLButtonElement;
 const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
 const importBtn = document.getElementById('import-btn') as HTMLButtonElement;
 const importAnotherBtn = document.getElementById('import-another') as HTMLButtonElement;
+const closeBtn = document.getElementById('close-btn') as HTMLButtonElement;
 const successMessage = document.getElementById('success-message') as HTMLDivElement;
 const toastContainer = document.getElementById('toast-container') as HTMLDivElement;
 const addMoreBtn = document.getElementById('add-more-btn') as HTMLButtonElement;
@@ -63,14 +63,15 @@ class StepManager {
   }
 
   static updateFooterButtons(step: number) {
-    cancelBtn.style.display = step === 1 ? 'none' : 'block';
-    backBtn.style.display = step === 2 ? 'block' : 'none';
-    nextBtn.style.display = step === 1 && state.files.length > 0 ? 'block' : 'none';
-    importBtn.style.display = step === 2 ? 'block' : 'none';
+    backBtn.style.display = step === 3 ? 'block' : 'none';
+    cancelBtn.style.display = step === 3 ? 'block' : 'none';
+    nextBtn.style.display = step === 2 ? 'block' : 'none';
+    importBtn.style.display = step === 3 ? 'block' : 'none';
+    closeBtn.style.display = step === 4 ? 'block' : 'none';
   }
 
   static next() {
-    if (state.currentStep < 3) {
+    if (state.currentStep < 4) {
       this.updateStep(state.currentStep + 1);
     }
   }
@@ -116,25 +117,21 @@ class FileHandler {
 
     this.updateFileQueue();
 
-    // Parse the first file for preview
+    // Parse the first file for preview and go to step 2
     if (state.files.length > 0) {
       await this.parseFirstFile();
-      StepManager.updateFooterButtons(1);
+      if (state.currentStep === 1) {
+        StepManager.updateStep(2);
+      }
     }
   }
 
   static updateFileQueue() {
-    const emptyState = document.querySelector('[data-step="1"] .empty-state') as HTMLElement;
-
     if (state.files.length === 0) {
-      fileQueue.style.display = 'none';
-      if (emptyState) emptyState.style.display = 'flex';
+      StepManager.updateStep(1);
       return;
     }
 
-    // Hide drop zone, show file queue
-    if (emptyState) emptyState.style.display = 'none';
-    fileQueue.style.display = 'block';
     queueList.innerHTML = '';
 
     state.files.forEach((file, index) => {
@@ -152,7 +149,6 @@ class FileHandler {
   static removeFile(index: number) {
     state.files.splice(index, 1);
     this.updateFileQueue();
-    StepManager.updateFooterButtons(1);
 
     if (state.files.length === 0) {
       state.parsedTokens = null;
@@ -178,6 +174,29 @@ class FileHandler {
       Toast.show(`Error parsing ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
       state.parsedTokens = null;
     }
+  }
+}
+
+// Toast Notifications
+class Toast {
+  static show(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration: number = 3000) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    const icon = {
+      success: '✓',
+      error: '✕',
+      warning: '⚠',
+      info: 'ℹ'
+    }[type];
+
+    toast.innerHTML = `<span>${icon}</span> ${message}`;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
   }
 }
 
@@ -217,31 +236,6 @@ fileInput.addEventListener('change', (e) => {
 addMoreBtn.addEventListener('click', () => {
   fileInput.click();
 });
-
-// Toast Notifications
-class Toast {
-  static show(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration: number = 3000) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-
-    // Add icon based on type
-    const icon = {
-      success: '✓',
-      error: '✕',
-      warning: '⚠',
-      info: 'ℹ'
-    }[type];
-
-    toast.innerHTML = `<span>${icon}</span> ${message}`;
-    toastContainer.appendChild(toast);
-
-    // Auto-remove after duration
-    setTimeout(() => {
-      toast.classList.add('hiding');
-      setTimeout(() => toast.remove(), 300);
-    }, duration);
-  }
-}
 
 /**
  * Parse JSON format tokens
@@ -473,9 +467,9 @@ class KeyboardHandler {
         }
 
         // Trigger next/import based on current step
-        if (state.currentStep === 1 && nextBtn.style.display !== 'none') {
+        if (state.currentStep === 2 && nextBtn.style.display !== 'none') {
           nextBtn.click();
-        } else if (state.currentStep === 2 && importBtn.style.display !== 'none') {
+        } else if (state.currentStep === 3 && importBtn.style.display !== 'none') {
           importBtn.click();
         }
       }
@@ -538,7 +532,6 @@ backBtn.addEventListener('click', () => {
 
 nextBtn.addEventListener('click', async () => {
   if (state.files.length === 0) {
-    Toast.show('Please select at least one file', 'warning');
     return;
   }
 
@@ -548,8 +541,6 @@ nextBtn.addEventListener('click', async () => {
   if (state.parsedTokens) {
     showPreview(state.parsedTokens);
     StepManager.next();
-  } else {
-    Toast.show('Failed to parse tokens', 'error');
   }
 });
 
@@ -575,8 +566,7 @@ importBtn.addEventListener('click', async () => {
   setTimeout(() => {
     if (importBtn.disabled) {
       importBtn.disabled = false;
-      importBtn.innerHTML = '<i data-feather="download"></i> Import Tokens';
-      if (typeof feather !== 'undefined') feather.replace();
+      importBtn.textContent = 'Import Tokens';
       Toast.show('Import timed out — are you running inside Figma?', 'warning');
     }
   }, 5000);
@@ -586,6 +576,10 @@ importAnotherBtn.addEventListener('click', () => {
   StepManager.reset();
 });
 
+closeBtn.addEventListener('click', () => {
+  parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+});
+
 // Listen for messages from the main plugin
 window.addEventListener('message', (event: MessageEvent) => {
   const msg = event.data.pluginMessage;
@@ -593,8 +587,7 @@ window.addEventListener('message', (event: MessageEvent) => {
   if (msg.type === 'import-success') {
     const tokenCount = msg.tokenCount || 0;
     successMessage.textContent = `${tokenCount} tokens have been imported to Figma`;
-    StepManager.updateStep(3);
-    Toast.show('Import successful!', 'success');
+    StepManager.updateStep(4);
   } else if (msg.type === 'import-error') {
     Toast.show(`Import failed: ${msg.message}`, 'error');
     importBtn.disabled = false;

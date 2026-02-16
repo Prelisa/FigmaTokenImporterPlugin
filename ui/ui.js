@@ -21,6 +21,7 @@ const backBtn = document.getElementById('back-btn');
 const nextBtn = document.getElementById('next-btn');
 const importBtn = document.getElementById('import-btn');
 const importAnotherBtn = document.getElementById('import-another');
+const closeBtn = document.getElementById('close-btn');
 const successMessage = document.getElementById('success-message');
 const toastContainer = document.getElementById('toast-container');
 const addMoreBtn = document.getElementById('add-more-btn');
@@ -43,13 +44,14 @@ class StepManager {
         this.updateFooterButtons(step);
     }
     static updateFooterButtons(step) {
-        cancelBtn.style.display = step === 1 ? 'none' : 'block';
-        backBtn.style.display = step === 2 ? 'block' : 'none';
-        nextBtn.style.display = step === 1 && state.files.length > 0 ? 'block' : 'none';
-        importBtn.style.display = step === 2 ? 'block' : 'none';
+        backBtn.style.display = step === 3 ? 'block' : 'none';
+        cancelBtn.style.display = step === 3 ? 'block' : 'none';
+        nextBtn.style.display = step === 2 ? 'block' : 'none';
+        importBtn.style.display = step === 3 ? 'block' : 'none';
+        closeBtn.style.display = step === 4 ? 'block' : 'none';
     }
     static next() {
-        if (state.currentStep < 3) {
+        if (state.currentStep < 4) {
             this.updateStep(state.currentStep + 1);
         }
     }
@@ -85,24 +87,19 @@ class FileHandler {
             Toast.show(`${dupeCount} duplicate file(s) skipped`, 'warning');
         }
         this.updateFileQueue();
-        // Parse the first file for preview
+        // Parse the first file for preview and go to step 2
         if (state.files.length > 0) {
             await this.parseFirstFile();
-            StepManager.updateFooterButtons(1);
+            if (state.currentStep === 1) {
+                StepManager.updateStep(2);
+            }
         }
     }
     static updateFileQueue() {
-        const emptyState = document.querySelector('[data-step="1"] .empty-state');
         if (state.files.length === 0) {
-            fileQueue.style.display = 'none';
-            if (emptyState)
-                emptyState.style.display = 'flex';
+            StepManager.updateStep(1);
             return;
         }
-        // Hide drop zone, show file queue
-        if (emptyState)
-            emptyState.style.display = 'none';
-        fileQueue.style.display = 'block';
         queueList.innerHTML = '';
         state.files.forEach((file, index) => {
             const queueItem = document.createElement('div');
@@ -118,7 +115,6 @@ class FileHandler {
     static removeFile(index) {
         state.files.splice(index, 1);
         this.updateFileQueue();
-        StepManager.updateFooterButtons(1);
         if (state.files.length === 0) {
             state.parsedTokens = null;
             fileInput.value = '';
@@ -396,10 +392,10 @@ class KeyboardHandler {
                     return;
                 }
                 // Trigger next/import based on current step
-                if (state.currentStep === 1 && nextBtn.style.display !== 'none') {
+                if (state.currentStep === 2 && nextBtn.style.display !== 'none') {
                     nextBtn.click();
                 }
-                else if (state.currentStep === 2 && importBtn.style.display !== 'none') {
+                else if (state.currentStep === 3 && importBtn.style.display !== 'none') {
                     importBtn.click();
                 }
             }
@@ -484,9 +480,7 @@ importBtn.addEventListener('click', async () => {
     setTimeout(() => {
         if (importBtn.disabled) {
             importBtn.disabled = false;
-            importBtn.innerHTML = '<i data-feather="download"></i> Import Tokens';
-            if (typeof feather !== 'undefined')
-                feather.replace();
+            importBtn.textContent = 'Import Tokens';
             Toast.show('Import timed out — are you running inside Figma?', 'warning');
         }
     }, 5000);
@@ -494,14 +488,16 @@ importBtn.addEventListener('click', async () => {
 importAnotherBtn.addEventListener('click', () => {
     StepManager.reset();
 });
+closeBtn.addEventListener('click', () => {
+    parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+});
 // Listen for messages from the main plugin
 window.addEventListener('message', (event) => {
     const msg = event.data.pluginMessage;
     if (msg.type === 'import-success') {
         const tokenCount = msg.tokenCount || 0;
         successMessage.textContent = `${tokenCount} tokens have been imported to Figma`;
-        StepManager.updateStep(3);
-        Toast.show('Import successful!', 'success');
+        StepManager.updateStep(4);
     }
     else if (msg.type === 'import-error') {
         Toast.show(`Import failed: ${msg.message}`, 'error');
