@@ -1,9 +1,10 @@
 {
   "name": "Token Importer",
-  "id": "token-importer-plugin",
+  "id": "1605356817451562310",
   "api": "1.0.0",
   "main": "dist/code.js",
   "editorType": ["figma"],
   "permissions": [],
-  "documentAccess": "full"
+  "networkAccess": { "allowedDomains": ["none"] },
+  "documentAccess": "dynamic-page"
 }
