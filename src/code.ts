@@ -30,7 +30,7 @@ figma.ui.onmessage = async (msg: any) => {
     }
   } else if (msg.type === 'get-collections') {
     try {
-      const collections = await figma.variables.getLocalVariableCollections();
+      const collections = await figma.variables.getLocalVariableCollectionsAsync();
       const collectionNames = collections.map(c => c.name);
       figma.ui.postMessage({
         type: 'collections-list',
@@ -53,7 +53,7 @@ figma.ui.onmessage = async (msg: any) => {
  * @returns The total number of tokens imported
  */
 async function importTokensToFigma(tokens: ParsedTokens, preferredCollectionName: string | null = null): Promise<number> {
-  const existingCollections = await figma.variables.getLocalVariableCollections();
+  const existingCollections = await figma.variables.getLocalVariableCollectionsAsync();
   let totalTokens = 0;
 
   for (const [collectionName, variables] of Object.entries(tokens)) {
@@ -73,7 +73,7 @@ async function importTokensToFigma(tokens: ParsedTokens, preferredCollectionName
 
     // Resolve all existing variables in this collection (getVariableById is async)
     const existingVariables = await Promise.all(
-      collection.variableIds.map((id: string) => figma.variables.getVariableById(id))
+      collection.variableIds.map((id: string) => figma.variables.getVariableByIdAsync(id))
     );
 
     // Create or update variables
@@ -82,7 +82,7 @@ async function importTokensToFigma(tokens: ParsedTokens, preferredCollectionName
 
       // Create variable if it doesn't exist
       if (!variable) {
-        variable = figma.variables.createVariable(variableName, collection.id, resolveVariableType(value));
+        variable = figma.variables.createVariable(variableName, collection, resolveVariableType(value));
       }
 
       // Set the value in the default mode
