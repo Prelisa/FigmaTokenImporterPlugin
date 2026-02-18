@@ -4,7 +4,7 @@
 declare const figma: any;
 
 // Types
-import { ParsedTokens } from './types';
+type ParsedTokens = Record<string, Record<string, string | number | boolean>>;
 
 // Show the UI (HTML will be injected by build script)
 // @ts-ignore - __html__ is a placeholder replaced during build
