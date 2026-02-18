@@ -4,7 +4,7 @@
 declare const figma: any;
 
 // Types
-type ParsedTokens = Record<string, Record<string, string | number | boolean>>;
+import { ParsedTokens } from './types';
 
 // Show the UI (HTML will be injected by build script)
 // @ts-ignore - __html__ is a placeholder replaced during build
@@ -17,24 +17,24 @@ figma.ui.onmessage = async (msg: any) => {
       const tokens = msg.tokens as ParsedTokens;
       const collectionName = msg.collectionName as string | null;
       const tokenCount = await importTokensToFigma(tokens, collectionName);
-      figma.ui.postMessage({ 
-        type: 'import-success', 
+      figma.ui.postMessage({
+        type: 'import-success',
         message: 'Tokens imported successfully!',
         tokenCount: tokenCount
       });
     } catch (error) {
-      figma.ui.postMessage({ 
-        type: 'import-error', 
-        message: error instanceof Error ? error.message : 'Unknown error occurred' 
+      figma.ui.postMessage({
+        type: 'import-error',
+        message: error instanceof Error ? error.message : 'Unknown error occurred'
       });
     }
   } else if (msg.type === 'get-collections') {
     try {
       const collections = await figma.variables.getLocalVariableCollections();
       const collectionNames = collections.map(c => c.name);
-      figma.ui.postMessage({ 
-        type: 'collections-list', 
-        collections: collectionNames 
+      figma.ui.postMessage({
+        type: 'collections-list',
+        collections: collectionNames
       });
     } catch (error) {
       figma.ui.postMessage({
@@ -55,15 +55,15 @@ figma.ui.onmessage = async (msg: any) => {
 async function importTokensToFigma(tokens: ParsedTokens, preferredCollectionName: string | null = null): Promise<number> {
   const existingCollections = await figma.variables.getLocalVariableCollections();
   let totalTokens = 0;
-  
+
   for (const [collectionName, variables] of Object.entries(tokens)) {
     // Use preferred collection name if provided and this is the first/only collection
-    const targetCollectionName = preferredCollectionName && Object.keys(tokens).length === 1 
-      ? preferredCollectionName 
+    const targetCollectionName = preferredCollectionName && Object.keys(tokens).length === 1
+      ? preferredCollectionName
       : collectionName;
-      
-    let collection = existingCollections.find(c => c.name === targetCollectionName);
-    
+
+    let collection = existingCollections.find((c: any) => c.name === targetCollectionName);
+
     // Create collection if it doesn't exist
     if (!collection) {
       collection = figma.variables.createVariableCollection(targetCollectionName);
@@ -71,11 +71,14 @@ async function importTokensToFigma(tokens: ParsedTokens, preferredCollectionName
 
     const modeId = collection.defaultModeId;
 
+    // Resolve all existing variables in this collection (getVariableById is async)
+    const existingVariables = await Promise.all(
+      collection.variableIds.map((id: string) => figma.variables.getVariableById(id))
+    );
+
     // Create or update variables
     for (const [variableName, value] of Object.entries(variables)) {
-      let variable = collection.variableIds
-        .map(id => figma.variables.getVariableById(id))
-        .find((v): v is any => v !== null && v.name === variableName);
+      let variable = existingVariables.find((v: any) => v !== null && v.name === variableName);
 
       // Create variable if it doesn't exist
       if (!variable) {
