@@ -244,12 +244,31 @@ addMoreBtn.addEventListener('click', () => {
 function parseJson(content: string): ParsedTokens {
   const data = JSON.parse(content);
 
-  // Flatten nested structures if needed
+  // Check if this is DTCG format (tokens have $value property)
+  const isDTCG = containsDTCGTokens(data);
+
+  if (isDTCG) {
+    return parseDTCGTokens(data);
+  }
+
+  // Simple format: { "CollectionName": { "variableName": "value" } }
   const result: ParsedTokens = {};
 
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      result[key] = value as Record<string, any>;
+      // Check if this is a flat collection (values are primitives) or nested structure
+      const valueObj = value as Record<string, any>;
+      const hasOnlyPrimitives = Object.values(valueObj).every(
+        v => typeof v !== 'object' || v === null
+      );
+
+      if (hasOnlyPrimitives) {
+        result[key] = valueObj;
+      } else {
+        // Nested structure without $value - flatten it
+        if (!result[key]) result[key] = {};
+        flattenObject(valueObj, result[key], '');
+      }
     } else {
       // If flat structure, use single collection name
       if (!result['Default']) result['Default'] = {};
@@ -258,6 +277,79 @@ function parseJson(content: string): ParsedTokens {
   }
 
   return result;
+}
+
+/**
+ * Check if the data contains DTCG-format tokens (with $value property)
+ */
+function containsDTCGTokens(obj: any): boolean {
+  if (typeof obj !== 'object' || obj === null) return false;
+  if ('$value' in obj) return true;
+
+  for (const value of Object.values(obj)) {
+    if (containsDTCGTokens(value)) return true;
+  }
+  return false;
+}
+
+/**
+ * Parse DTCG (Design Tokens Community Group) format tokens
+ * Tokens have { "$value": "...", "$type": "..." } structure
+ */
+function parseDTCGTokens(data: any): ParsedTokens {
+  const result: ParsedTokens = {};
+
+  function traverse(obj: any, path: string[], collectionName: string) {
+    if (typeof obj !== 'object' || obj === null) return;
+
+    // Check if this is a token (has $value)
+    if ('$value' in obj) {
+      const variableName = path.join('/');
+      if (!result[collectionName]) result[collectionName] = {};
+
+      // Extract the actual value
+      let value = obj['$value'];
+
+      // Parse the value to appropriate type
+      if (typeof value === 'string') {
+        value = parseTokenValue(value);
+      }
+
+      result[collectionName][variableName] = value;
+      return;
+    }
+
+    // Otherwise, traverse deeper
+    for (const [key, value] of Object.entries(obj)) {
+      // Skip metadata keys
+      if (key.startsWith('$')) continue;
+
+      // Use first level as collection name
+      if (path.length === 0) {
+        traverse(value, [], key);
+      } else {
+        traverse(value, [...path, key], collectionName);
+      }
+    }
+  }
+
+  traverse(data, [], 'Default');
+  return result;
+}
+
+/**
+ * Flatten a nested object into variable names with path separators
+ */
+function flattenObject(obj: Record<string, any>, result: Record<string, any>, prefix: string) {
+  for (const [key, value] of Object.entries(obj)) {
+    const newKey = prefix ? `${prefix}/${key}` : key;
+
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      flattenObject(value, result, newKey);
+    } else {
+      result[newKey] = value;
+    }
+  }
 }
 
 /**
@@ -582,7 +674,8 @@ closeBtn.addEventListener('click', () => {
 
 // Listen for messages from the main plugin
 window.addEventListener('message', (event: MessageEvent) => {
-  const msg = event.data.pluginMessage;
+  const msg = event.data?.pluginMessage;
+  if (!msg) return;
 
   if (msg.type === 'import-success') {
     const tokenCount = msg.tokenCount || 0;

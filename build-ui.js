@@ -13,21 +13,15 @@ if (!fs.existsSync(distDir)) {
 
 // 1. Build UI: Read HTML and inject compiled JS
 let html = fs.readFileSync(path.join(__dirname, "ui", "ui.html"), "utf-8");
-const uiJs = fs.readFileSync(path.join(__dirname, "dist", "ui", "ui.js"), "utf-8");
-html = html.replace('<script src="ui.js"></script>', `<script>\n${uiJs}\n</script>`);
+let uiJs = fs.readFileSync(path.join(__dirname, "dist", "ui", "ui.js"), "utf-8");
+// Remove sourcemap reference which can cause issues when embedded
+uiJs = uiJs.replace(/\/\/# sourceMappingURL=.*$/gm, '');
+html = html.replace('<script src="ui.js"></script>', () => `<script>\n${uiJs}\n</script>`);
 fs.writeFileSync(path.join(distDir, "ui.html"), html);
 console.log("✓ UI bundle created");
 
-// 2. Read code.js and prepare HTML injection
-let codeJs = fs.readFileSync(srcCodePath, "utf-8");
-
-// 3. Create __html__ constant properly escaped
-const htmlEscaped = JSON.stringify(html);
-
-// 4. Replace the __html__ reference in showUI call with actual HTML
-// This avoids the "not extensible" error
-codeJs = codeJs.replace("figma.showUI(__html__, { width: 360, height: 640 });", `figma.showUI(${htmlEscaped}, { width: 360, height: 640 });`);
-
-// 5. Save the final code.js
+// 2. Copy code.js to dist root as-is
+// __html__ is automatically populated by Figma from the "ui" field in manifest.json
+const codeJs = fs.readFileSync(srcCodePath, "utf-8");
 fs.writeFileSync(rootCodePath, codeJs);
-console.log("✓ code.js created with inlined HTML");
+console.log("✓ code.js copied to dist root");
